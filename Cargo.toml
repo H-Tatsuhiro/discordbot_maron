@@ -1,0 +1,13 @@
+[package]
+name = "discordbot_maron"
+authors = ["Tatsuhiro Hashimoto <admin@h-tatsu.com>"]
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tokio = {version = "1.6.1", features = ["macros", "rt-multi-thread"]}
+serenity = {version = "0.10.7", features = ["framework", "standard_framework"]}
+serde = {version = "1.0", features = ["derive"]}
+serde_json = "1.0"
