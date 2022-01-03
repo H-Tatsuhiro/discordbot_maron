@@ -8,6 +8,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
 
 jobs:
   build:
@@ -17,6 +18,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build
-      run: cargo build --verbose
+      run: DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }} cargo build --verbose
     - name: Run tests
-      run: cargo test --verbose
+      run: DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }} cargo test --verbose

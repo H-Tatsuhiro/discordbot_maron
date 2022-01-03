@@ -1,4 +1,4 @@
-use std::{collections::HashSet, fs::File, io::BufReader, path::PathBuf};
+use std::{collections::HashSet, env};
 
 use serenity::async_trait;
 use serenity::framework::standard::{
@@ -10,8 +10,6 @@ use serenity::framework::StandardFramework;
 use serenity::model::{channel::Message, gateway::Ready, id::UserId};
 use serenity::prelude::{Client, Context, EventHandler};
 
-use serde::{Deserialize, Serialize};
-use serde_json::Result;
 use serenity::model::channel::MessageActivity;
 use serenity::model::user::User;
 
@@ -60,24 +58,9 @@ async fn my_help(
     Ok(())
 }
 
-#[derive(Serialize, Deserialize)]
-struct Token {
-    token: String,
-}
-
-fn get_token(file_name: &PathBuf) -> Result<String> {
-    let file = File::open(file_name).unwrap();
-    let reader = BufReader::new(file);
-    let t: Token = serde_json::from_reader(reader).unwrap();
-    Ok(t.token)
-}
-
-
 #[tokio::main]
 async fn main() {
-    let mut path = PathBuf::new();
-    path.push("config.json");
-    let token = get_token(&path).expect("Failed to read the token.");
+    let token = env::var("DISCORD_TOKEN").unwrap();
 
     let framework = StandardFramework::new()
         .configure(|c| c.prefix("/"))
@@ -99,16 +82,16 @@ async fn main() {
 mod tests {
     use super::*;
     #[test]
-    fn check_token() {
-        let mut path = PathBuf::new();
-        path.push("config.json");
-        let token = get_token(&path);
-        match token {
+    fn check_env() {
+        let secret = env::var("DISCORD_TOKEN");
+        match secret {
             Ok(x) => {
                 println!("{}", x);
                 assert!(true);
             },
-            Err(e) => assert!(false),
+            Err(e) => {
+                assert!(false);
+            }
         }
     }
 }
