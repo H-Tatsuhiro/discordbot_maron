@@ -21,6 +21,17 @@ struct Handler;
 
 #[async_trait]
 impl EventHandler for Handler {
+    async fn message(&self, ctx: Context, msg: Message) {
+        if msg.content == "!ping" {
+            println!("Shard {}", ctx.shard_id);
+
+            if let Err(e) = msg.channel_id.say(&ctx.http, "Pong!").await {
+                println!("Error sending message: {:?}", e);
+            }
+        }
+    }
+
+
     async fn ready(&self, _: Context, ready: Ready) {
         println!("{} is connected.", ready.user.name);
     }
@@ -79,7 +90,7 @@ async fn main() {
         .await
         .expect("Failed to create client.");
 
-    if let Err(e) = client.start().await {
+    if let Err(e) = client.start_shards(1).await {
         println!("Client error: {:?}", e);
     }
 }
