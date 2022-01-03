@@ -27,6 +27,13 @@ impl EventHandler for Handler {
                 println!("Error sending message: {:?}", e);
             }
         }
+        else if msg.content == "!messageme" {
+            let dm = msg.author.dm(&ctx, |m| m.content("はじめまして！")).await;
+
+            if let Err(e) = dm {
+                println!("Error when direct messaging user: {:?}", e);
+            }
+        }
     }
 
 
