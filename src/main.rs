@@ -50,7 +50,7 @@ impl EventHandler for Handler {
     }
 }
 
-use discordbot_maron::commands::{greet::*, about::*};
+use discordbot_maron::commands::{about::*, greet::*};
 
 #[group]
 #[description("汎用コマンド")]
