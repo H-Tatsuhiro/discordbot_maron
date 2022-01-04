@@ -9,6 +9,7 @@ use serenity::framework::standard::{
 use serenity::framework::StandardFramework;
 use serenity::model::{channel::Message, gateway::Ready, id::UserId};
 use serenity::prelude::{Client, Context, EventHandler};
+use serenity::utils::MessageBuilder;
 
 struct Handler;
 
@@ -16,9 +17,23 @@ struct Handler;
 impl EventHandler for Handler {
     async fn message(&self, ctx: Context, msg: Message) {
         if msg.content == "!ping" {
-            println!("Shard {}", ctx.shard_id);
+            let channel = match msg.channel_id.to_channel(&ctx).await {
+                Ok(channel) => channel,
+                Err(e) => {
+                    println!("Error getting channel: {:?}", e);
+                    return;
+                }
+            };
 
-            if let Err(e) = msg.channel_id.say(&ctx.http, "Pong!").await {
+            let response = MessageBuilder::new()
+                .push_bold_safe(&msg.author.name)
+                .push("さん！")
+                .mention(&channel)
+                .push("に居ないで早く寝なさい！\n")
+                .push(format!("ちなみに今は{}番シャードにいるよ！", ctx.shard_id))
+                .build();
+
+            if let Err(e) = msg.channel_id.say(&ctx.http, &response).await {
                 println!("Error sending message: {:?}", e);
             }
         } else if msg.content == "!messageme" {
