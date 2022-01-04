@@ -1,4 +1,4 @@
-use serenity::framework::standard::{macros::command, CommandResult, CommandOptions};
+use serenity::framework::standard::{macros::command, CommandResult};
 use serenity::model::prelude::*;
 use serenity::prelude::*;
 

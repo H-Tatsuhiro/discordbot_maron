@@ -10,11 +10,6 @@ use serenity::framework::StandardFramework;
 use serenity::model::{channel::Message, gateway::Ready, id::UserId};
 use serenity::prelude::{Client, Context, EventHandler};
 
-use serenity::model::channel::MessageActivity;
-use serenity::model::user::User;
-
-use discordbot_maron::commands::greet;
-
 struct Handler;
 
 #[async_trait]
@@ -26,8 +21,7 @@ impl EventHandler for Handler {
             if let Err(e) = msg.channel_id.say(&ctx.http, "Pong!").await {
                 println!("Error sending message: {:?}", e);
             }
-        }
-        else if msg.content == "!messageme" {
+        } else if msg.content == "!messageme" {
             let dm = msg.author.dm(&ctx, |m| m.content("はじめまして！")).await;
 
             if let Err(e) = dm {
@@ -36,13 +30,12 @@ impl EventHandler for Handler {
         }
     }
 
-
     async fn ready(&self, _: Context, ready: Ready) {
         println!("{} is connected.", ready.user.name);
     }
 }
 
-use discordbot_maron::commands::{greet::*};
+use discordbot_maron::commands::greet::*;
 
 #[group]
 #[description("汎用コマンド")]
@@ -94,10 +87,9 @@ mod tests {
         match secret {
             Ok(x) => {
                 println!("{}", x);
-                assert!(true);
-            },
-            Err(e) => {
-                assert!(false);
+            }
+            Err(_) => {
+                panic!();
             }
         }
     }
