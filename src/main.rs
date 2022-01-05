@@ -75,6 +75,7 @@ async fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use discordbot_maron::chrono::get_time::get_time;
     #[test]
     fn check_env() {
         let secret = env::var("DISCORD_TOKEN");
@@ -86,5 +87,9 @@ mod tests {
                 panic!();
             }
         }
+    }
+    #[test]
+    fn check_get_time() {
+        println!("{}", get_time());
     }
 }
