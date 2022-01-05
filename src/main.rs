@@ -50,12 +50,12 @@ impl EventHandler for Handler {
     }
 }
 
-use discordbot_maron::commands::{about::*, greet::*};
+use discordbot_maron::commands::{about::*, greet::*, latency::*};
 
 #[group]
 #[description("汎用コマンド")]
 #[summary("一般")]
-#[commands(greet, about)]
+#[commands(greet, about, latency)]
 struct General;
 
 #[help]
