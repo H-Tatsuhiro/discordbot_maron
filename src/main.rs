@@ -78,7 +78,7 @@ async fn main() {
     let token = env::var("DISCORD_TOKEN").unwrap();
 
     let framework = StandardFramework::new()
-        .configure(|c| c.prefix("/"))
+        .configure(|c| c.prefix("!"))
         .help(&MY_HELP)
         .group(&GENERAL_GROUP);
 
