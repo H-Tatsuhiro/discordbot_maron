@@ -9,34 +9,13 @@ use serenity::framework::standard::{
 use serenity::framework::StandardFramework;
 use serenity::model::{channel::Message, gateway::Ready, id::UserId};
 use serenity::prelude::{Client, Context, EventHandler};
-use serenity::utils::MessageBuilder;
 
 struct Handler;
 
 #[async_trait]
 impl EventHandler for Handler {
     async fn message(&self, ctx: Context, msg: Message) {
-        if msg.content == "!ping" {
-            let channel = match msg.channel_id.to_channel(&ctx).await {
-                Ok(channel) => channel,
-                Err(e) => {
-                    println!("Error getting channel: {:?}", e);
-                    return;
-                }
-            };
-
-            let response = MessageBuilder::new()
-                .push_bold_safe(&msg.author.name)
-                .push("さん！")
-                .mention(&channel)
-                .push("に居ないで早く寝なさい！\n")
-                .push(format!("ちなみに今は{}番シャードにいるよ！", ctx.shard_id))
-                .build();
-
-            if let Err(e) = msg.channel_id.say(&ctx.http, &response).await {
-                println!("Error sending message: {:?}", e);
-            }
-        } else if msg.content == "!messageme" {
+        if msg.content == "!messageme" {
             let dm = msg.author.dm(&ctx, |m| m.content("はじめまして！")).await;
 
             if let Err(e) = dm {
@@ -50,12 +29,12 @@ impl EventHandler for Handler {
     }
 }
 
-use discordbot_maron::commands::{about::*, greet::*, latency::*};
+use discordbot_maron::commands::{about::*, greet::*, latency::*, ping::*};
 
 #[group]
 #[description("汎用コマンド")]
 #[summary("一般")]
-#[commands(greet, about, latency)]
+#[commands(greet, about, latency, ping)]
 struct General;
 
 #[help]
@@ -78,7 +57,7 @@ async fn main() {
     let token = env::var("DISCORD_TOKEN").unwrap();
 
     let framework = StandardFramework::new()
-        .configure(|c| c.prefix("/"))
+        .configure(|c| c.prefix("!"))
         .help(&MY_HELP)
         .group(&GENERAL_GROUP);
 
