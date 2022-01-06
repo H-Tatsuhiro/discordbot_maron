@@ -1,5 +1,3 @@
-use std::{collections::HashSet, env};
-
 use serenity::framework::standard::{
     help_commands,
     macros::{group, help},
@@ -9,6 +7,14 @@ use serenity::framework::StandardFramework;
 use serenity::model::{channel::Message, gateway::Ready, id::UserId};
 use serenity::prelude::{Client, Context, EventHandler};
 use serenity::{async_trait, http::Http};
+use std::{
+    collections::{HashMap, HashSet},
+    env,
+};
+
+use discordbot_maron::client::command_counter::CommandCounter;
+use discordbot_maron::commands::{about::*, ferris::*, greet::*, latency::*, ping::*};
+use discordbot_maron::hook_functions::before::*;
 
 struct Handler;
 
@@ -28,8 +34,6 @@ impl EventHandler for Handler {
         println!("{} is connected.", ready.user.name);
     }
 }
-
-use discordbot_maron::commands::{about::*, ferris::*, greet::*, latency::*, ping::*};
 
 #[group]
 #[description("汎用コマンド")]
@@ -81,12 +85,14 @@ async fn main() {
                 .delimiters(vec![", ", ", "])
                 .owners(owners)
         })
+        .before(before)
         .help(&MY_HELP)
         .group(&GENERAL_GROUP);
 
     let mut client = Client::builder(&token)
         .event_handler(Handler)
         .framework(framework)
+        .type_map_insert::<CommandCounter>(HashMap::default())
         .await
         .expect("Failed to create client.");
 
