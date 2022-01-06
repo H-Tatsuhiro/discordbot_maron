@@ -1,6 +1,5 @@
 use std::{collections::HashSet, env};
 
-use serenity::async_trait;
 use serenity::framework::standard::{
     help_commands,
     macros::{group, help},
@@ -9,6 +8,7 @@ use serenity::framework::standard::{
 use serenity::framework::StandardFramework;
 use serenity::model::{channel::Message, gateway::Ready, id::UserId};
 use serenity::prelude::{Client, Context, EventHandler};
+use serenity::{async_trait, http::Http};
 
 struct Handler;
 
@@ -55,9 +55,32 @@ async fn my_help(
 #[tokio::main]
 async fn main() {
     let token = env::var("DISCORD_TOKEN").unwrap();
+    let http = Http::new_with_token(&token);
+
+    let (owners, bot_id) = match http.get_current_application_info().await {
+        Ok(info) => {
+            let mut owners = HashSet::new();
+            if let Some(team) = info.team {
+                owners.insert(team.owner_user_id);
+            } else {
+                owners.insert(info.owner.id);
+            }
+            match http.get_current_user().await {
+                Ok(bot_id) => (owners, bot_id.id),
+                Err(e) => panic!("Could not access the bot id {:?}", e),
+            }
+        }
+        Err(e) => panic!("Could not access application info {:?}", e),
+    };
 
     let framework = StandardFramework::new()
-        .configure(|c| c.prefix("!"))
+        .configure(|c| {
+            c.prefix("!")
+                .with_whitespace(true)
+                .on_mention(Some(bot_id))
+                .delimiters(vec![", ", ", "])
+                .owners(owners)
+        })
         .help(&MY_HELP)
         .group(&GENERAL_GROUP);
 
