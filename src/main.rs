@@ -14,7 +14,7 @@ use std::{
 
 use discordbot_maron::client::command_counter::CommandCounter;
 use discordbot_maron::commands::{about::*, ferris::*, greet::*, latency::*, ping::*};
-use discordbot_maron::hook_functions::before::*;
+use discordbot_maron::hook_functions::{after::*, before::*};
 
 struct Handler;
 
@@ -86,6 +86,7 @@ async fn main() {
                 .owners(owners)
         })
         .before(before)
+        .after(after)
         .help(&MY_HELP)
         .group(&GENERAL_GROUP);
 
