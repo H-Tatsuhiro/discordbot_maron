@@ -10,9 +10,11 @@ use serenity::{async_trait, http::Http};
 use std::{
     collections::{HashMap, HashSet},
     env,
+    sync::Arc,
 };
 
 use discordbot_maron::client::command_counter::CommandCounter;
+use discordbot_maron::client::shard_manage::ShardManagerContainer;
 use discordbot_maron::commands::{about::*, ferris::*, greet::*, latency::*, ping::*};
 use discordbot_maron::emoji::emoji_struct::EMOJI_GROUP;
 use discordbot_maron::hook_functions::{after::*, before::*, unknown_command::*};
@@ -99,6 +101,10 @@ async fn main() {
         .type_map_insert::<CommandCounter>(HashMap::default())
         .await
         .expect("Failed to create client.");
+    {
+        let mut data = client.data.write().await;
+        data.insert::<ShardManagerContainer>(Arc::clone(&client.shard_manager));
+    }
 
     if let Err(e) = client.start_shards(1).await {
         println!("Client error: {:?}", e);
