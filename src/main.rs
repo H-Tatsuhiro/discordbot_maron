@@ -14,6 +14,7 @@ use std::{
 
 use discordbot_maron::client::command_counter::CommandCounter;
 use discordbot_maron::commands::{about::*, ferris::*, greet::*, latency::*, ping::*};
+use discordbot_maron::emoji::emoji_struct::EMOJI_GROUP;
 use discordbot_maron::hook_functions::{after::*, before::*, unknown_command::*};
 
 struct Handler;
@@ -89,7 +90,8 @@ async fn main() {
         .after(after)
         .unrecognised_command(unknown_command)
         .help(&MY_HELP)
-        .group(&GENERAL_GROUP);
+        .group(&GENERAL_GROUP)
+        .group(&EMOJI_GROUP);
 
     let mut client = Client::builder(&token)
         .event_handler(Handler)
