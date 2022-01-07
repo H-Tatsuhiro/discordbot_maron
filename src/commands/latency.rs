@@ -25,6 +25,9 @@ pub async fn latency(ctx: &Context, msg: &Message) -> CommandResult {
             return Ok(());
         }
     };
+
+    println!("{:?}", runner.latency);
+
     msg.reply(ctx, &format!("Shardの遅延は {:?} だよ！", runner.latency))
         .await?;
     Ok(())
