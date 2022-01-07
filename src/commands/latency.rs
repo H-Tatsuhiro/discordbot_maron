@@ -26,9 +26,12 @@ pub async fn latency(ctx: &Context, msg: &Message) -> CommandResult {
         }
     };
 
-    println!("{:?}", runner.latency);
+    let late = match runner.latency {
+        Some(x) => x,
+        None => std::time::Duration::from_millis(0)
+    };
 
-    msg.reply(ctx, &format!("Shardの遅延は {:?} だよ！", runner.latency))
+    msg.reply(ctx, &format!("Shardの遅延は {:?} だよ！", &late))
         .await?;
     Ok(())
 }
