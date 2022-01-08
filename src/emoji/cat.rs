@@ -5,6 +5,7 @@ use serenity::prelude::*;
 
 #[command]
 #[aliases("kitty", "neko")]
+#[description = "猫の絵文字"]
 #[bucket = "emoji"]
 #[required_permissions("ADMINISTRATOR")]
 pub async fn cat(ctx: &Context, msg: &Message) -> CommandResult {
