@@ -3,8 +3,6 @@ use serenity::model::channel::Message;
 use serenity::prelude::*;
 
 #[command]
-#[aliases("tori")]
-#[description = "鳥の絵文字"]
 pub async fn bird(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
     let content = if args.is_empty() {
         ":bird:".to_string()
