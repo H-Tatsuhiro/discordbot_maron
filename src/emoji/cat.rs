@@ -7,8 +7,17 @@ use serenity::prelude::*;
 #[aliases("kitty", "neko")]
 #[description = "猫の絵文字"]
 #[bucket = "emoji"]
-#[required_permissions("ADMINISTRATOR")]
 pub async fn cat(ctx: &Context, msg: &Message) -> CommandResult {
-    msg.reply(&ctx, ":cat:").await?;
+    if let Some(member) = &msg.member {
+        for role in &member.roles {
+            if role
+                .to_role_cached(&ctx.cache)
+                .await
+                .map_or(false, |r| r.name == "Event Staff")
+            {
+                msg.reply(&ctx, ":cat:").await?;
+            }
+        }
+    }
     Err(RevertBucket.into())
 }
